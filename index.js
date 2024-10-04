@@ -5,10 +5,18 @@ const bodyParser = require('body-parser');
 const app = express();
 const PORT = process.env.PORT || 3005;
 
-app.use(express.json());
 app.use(morgan('dev'));
 app.use(bodyParser.json({limit: '100mb'}));
 app.use(bodyParser.urlencoded({limit: '100mb', extended: true}));
+
+app.use((err, req, res, next) => {
+    if (err.type === 'entity.too.large') {
+        console.error('PayloadTooLargeError: Request size exceeds limit.');
+        res.status(413).json({ error: 'Payload too large' });
+    } else {
+        next(err);
+    }
+});
 
 app.get('/ping', (req, res) => {
     res.send('pong');

@@ -1,21 +1,24 @@
 const express = require('express');
-const { simpleParser } = require('mailparser');
+const {simpleParser} = require('mailparser');
 const morgan = require('morgan');
+const bodyParser = require('body-parser');
 const app = express();
 const PORT = process.env.PORT || 3005;
 
 app.use(express.json());
 app.use(morgan('dev'));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 app.get('/ping', (req, res) => {
     res.send('pong');
 });
 
 app.post('/parseEmail', async (req, res) => {
-    const { body } = req.body;
+    const {body} = req.body;
 
     if (!body) {
-        return res.status(400).json({ error: 'Raw email body is required.' });
+        return res.status(400).json({error: 'Raw email body is required.'});
     }
 
     try {
@@ -41,7 +44,7 @@ app.post('/parseEmail', async (req, res) => {
         res.json(responseData);
     } catch (error) {
         console.error('Error parsing email:', error);
-        res.status(500).json({ error: 'Failed to parse email.' });
+        res.status(500).json({error: 'Failed to parse email.'});
     }
 });
 

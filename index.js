@@ -1,10 +1,11 @@
 const express = require('express');
 const { simpleParser } = require('mailparser');
-
+const morgan = require('morgan');
 const app = express();
 const PORT = process.env.PORT || 3005;
 
 app.use(express.json());
+app.use(morgan('dev'));
 
 app.get('/ping', (req, res) => {
     res.send('pong');

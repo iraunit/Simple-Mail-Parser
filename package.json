@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "express": "^4.21.0",
+    "mailparser": "^3.7.1"
+  }
+}
